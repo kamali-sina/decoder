@@ -1,12 +1,14 @@
 import sys
 from Number_Decoder import Number_Decoder
+from String_Decoder import String_Decoder
 
 argv = sys.argv
 if (len(argv) < 2):
-    print('state the type of decoding please, you can use -help for more information')
+    print('state the type of decoding please, you can use --help for more information')
     exit()
-if (argv[1] == '-help'):
-    print('the modes currently supported are:\n\n1- decoding a string of numbers. keyword: number\n')
+if (argv[1] == '--help'):
+    print('the modes currently supported are:\n\n1- decoding a string of numbers.'
+            +' keyword: number\n2- decoding a string. keyword: string')
     exit()
 if (len(argv) < 3):
     print('*no split_by specified, using space\n')
@@ -21,6 +23,9 @@ class Decoder:
         if (mode == 'number'):
             print('*setting mode to "string of numbers to string"\n')
             self.decoder = Number_Decoder(split_by=self.split_by)
+        elif (mode == 'string'):
+            print('*setting mode to "string to string"\n')
+            self.decoder = String_Decoder(split_by=self.split_by)
         else:
             print('no mode recognized')
             exit()
