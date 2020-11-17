@@ -1,3 +1,4 @@
+# pylint: disable=F0401
 import periodictable as pt
 
 START_OF_ALPHABET = 97
@@ -25,7 +26,7 @@ class Number_Decoder:
         except:
             print('--this set of numbers cannot be parsed to periodic table elements--')
         print('"')
-    
+
     def decode(self, input_string):
         dupped_input = input_string.split(self.split_by)
         self._ascii_to_string(dupped_input)
