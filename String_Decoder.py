@@ -9,7 +9,7 @@ class String_Decoder:
     def _print_list_of_duppeds(self, list_of_duppeds):
         for i in range(len(list_of_duppeds)):
             print(f'{i}: ', end='')
-            self._print_dupped_string(list_of_duppeds(i))
+            self._print_dupped_string(list_of_duppeds[i])
 
     def _print_dupped_string(self, dupped_input):
         for i in dupped_input:
