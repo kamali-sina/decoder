@@ -9,13 +9,16 @@ class Number_Decoder:
     def _ascii_to_string(self, dupped_input):
         print('to ascii string: "',end="")
         for i in dupped_input:
+            if (int(i) > 255):
+                print('this set of numbers can\'t be ascii')
+                return
             print(chr(int(i)),end="")
         print('"')
-    
+
     def _alphabet_to_string(self, dupped_input):
         print('to alphabet string: "',end="")
         for i in dupped_input:
-            print(chr(int(i) + START_OF_ALPHABET - 1),end="")
+            print(chr(((int(i) - 1) % 26) + START_OF_ALPHABET),end="")
         print('"')
 
     def _periodic_table_to_string(self, dupped_input):
