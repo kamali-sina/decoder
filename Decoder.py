@@ -1,6 +1,8 @@
 import sys
 from Number_Decoder import Number_Decoder
 from String_Decoder import String_Decoder
+from nltk.corpus import words
+from persian_english_keyboardmap import helper
 
 argv = sys.argv
 if (len(argv) < 2):
@@ -20,12 +22,13 @@ class Decoder:
     def __init__(self, mode, split_by=' '):
         self.split_by = split_by
         self.decoder = None
+        self.words = words.words() + helper
         if (mode == 'number'):
             print('*setting mode to "string of numbers to string"\n')
             self.decoder = Number_Decoder(split_by=self.split_by)
         elif (mode == 'string'):
             print('*setting mode to "string to string"\n')
-            self.decoder = String_Decoder(split_by=self.split_by)
+            self.decoder = String_Decoder(split_by=self.split_by, words=self.words)
         else:
             print('no mode recognized')
             exit()

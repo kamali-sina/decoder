@@ -3,9 +3,10 @@ from meaning_check import meaning_check
 from tqdm import tqdm
 
 class String_Decoder:
-    def __init__(self, split_by=' '):
+    def __init__(self, split_by=' ', words=None):
         self.split_by = split_by
-    
+        self.words = words
+
     def _print_list_of_duppeds(self, list_of_duppeds):
         for i in range(len(list_of_duppeds)):
             print(f'{i}: ', end='')
@@ -35,7 +36,7 @@ class String_Decoder:
         print('\ntrying ceasar cipher decode...')
         found = False
         result = []
-        for key in tqdm(range (26)):
+        for key in range (26):
             mini_result = []
             for i in dupped_input:
                 word = i.lower()
@@ -43,7 +44,7 @@ class String_Decoder:
                 for j in range(len(word)):
                     new_word = new_word + chr(((ord(word[j]) - ord('a') - key) % 26) + ord('a'))
                 mini_result.append(new_word)
-            if (meaning_check(mini_result)):
+            if (meaning_check(mini_result, word_list=self.words)):
                 found = True
                 print('\ndecoded with ceasar cipher key ' + str(key) + ':')
                 self._print_dupped_string(mini_result)

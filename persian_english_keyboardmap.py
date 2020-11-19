@@ -31,3 +31,5 @@ kb_map =    {'a': 'ش',
             ']': 'چ',
             '`': 'پ',
             '\\': 'پ'}
+
+helper = ['fuck', 'cunt', 'motherfucker', 'wtf']
