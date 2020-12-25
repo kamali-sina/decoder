@@ -2,7 +2,7 @@ import sys
 from Number_Decoder import Number_Decoder
 from String_Decoder import String_Decoder
 from nltk.corpus import words
-from persian_english_keyboardmap import helper
+from _helpers import helper
 
 argv = sys.argv
 if (len(argv) < 2):

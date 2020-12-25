@@ -1,4 +1,4 @@
-from persian_english_keyboardmap import kb_map
+from _helpers import kb_map
 from meaning_check import meaning_check
 from tqdm import tqdm
 
