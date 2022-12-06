@@ -43,7 +43,10 @@ class String_Decoder:
                 word = i.lower()
                 new_word = ''
                 for j in range(len(word)):
-                    new_word = new_word + chr(((ord(word[j]) - ord('a') - key) % 26) + ord('a'))
+                    if (ord(word[j]) - ord('a') < 0 or ord(word[j]) - ord('a') > 26):
+                        new_word = new_word + word[j]
+                    else:
+                        new_word = new_word + chr(((ord(word[j]) - ord('a') - key) % 26) + ord('a'))
                 mini_result.append(new_word)
             if (meaning_check(mini_result, word_list=self.words)):
                 found = True
