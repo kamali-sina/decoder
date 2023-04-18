@@ -3,13 +3,19 @@ from itertools import combinations
 key_list = list(MORSE_CODE_DICT.keys())
 value_list = list(MORSE_CODE_DICT.values())
 
+def is_morse_code(string):
+    for c in string:
+        if c not in ['.', '-', ' ', '_', '/']:
+            return False
+    return True
+
 def decode_morse_code(splitted_string):
     message = ''
     for part in splitted_string:
         try:
             message += key_list[value_list.index(part)]
         except:
-            return ''
+            message += ' '
     return message
 
 def decode_with_space_inject(string, num_of_spaces):
