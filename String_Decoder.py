@@ -1,7 +1,7 @@
 from _helpers import kb_map
 from meaning_check import meaning_check
 from tqdm import tqdm
-from morse_code import decode_with_space_inject, decode_morse_code
+from morse_code import *
 
 class String_Decoder:
     def __init__(self, split_by=' ', words=None):
@@ -19,7 +19,6 @@ class String_Decoder:
         print()
     
     def _english_kb_to_persian(self, dupped_input):
-        print('\ntrying to translate to persian keyboard map...')
         ofile = open('./keyboard_map_result.txt', 'w')
         for i in dupped_input:
             word = i.lower()
@@ -31,10 +30,9 @@ class String_Decoder:
             ofile.write(self.split_by)
         ofile.write('\n')
         ofile.close()
-        print('translation complete. wrote to "./keyboard_map_result.txt"')
+        print('translated with persian keyboard map in "./keyboard_map_result.txt"')
 
     def _caesar_cipher(self , dupped_input):
-        print('\ntrying ceasar cipher decode...')
         found = False
         result = []
         for key in range (26):
@@ -54,19 +52,43 @@ class String_Decoder:
                 self._print_dupped_string(mini_result)
             result.append(mini_result)
         if (not found):
-            print('\ncould not decode anything with meaning with ceasar cipher')
+            print('\ncould not decode with ceasar cipher')
         else:
             print('done.')
         ans = input('do you want me to print all the results(y/n)? ')
         if (ans.strip().lower() == 'y' or ans.strip().lower() == 'yes'):
             print('printing all: \n')
             self._print_list_of_duppeds(result)
+    
+    def _abtash_cipher(self , dupped_input):
+        found = False
+        result = []
+        for i in dupped_input:
+            word = i.lower()
+            new_word = ''
+            for j in range(len(word)):
+                if (ord(word[j]) - ord('a') < 0 or ord(word[j]) - ord('a') > 26):
+                    new_word = new_word + word[j]
+                else:
+                    new_word = new_word + chr(ord('z') - ord(word[j]) + ord('a'))
+            result.append(new_word)
+        if (meaning_check(result, word_list=self.words)):
+            found = True
+            print('\ndecoded with abtash cipher: ')
+            self._print_dupped_string(result)
+        if (not found):
+            print('\ncould not decode with abtash cipher')
+        else:
+            print('done.')
 
     def _morse_code(self, input_string):
+        if not is_morse_code(input_string):
+            print('this string is not in morse code.')
+            return
         splitted_string = input_string.split()
         message = decode_morse_code(splitted_string)
         if (len(message) > 0):
-            print(f'decoded morse code: {message}')
+            print(f'decoded with morse code: {message}')
             return
         ans = input('\nfailed to decode morse code, do you want to brute force attack(y/n)? ')
         if (ans.strip().lower() == 'n' or ans.strip().lower() == 'no'):
@@ -85,5 +107,6 @@ class String_Decoder:
     def decode(self, input_string):
         dupped_input = input_string.split(self.split_by)
         self._english_kb_to_persian(dupped_input)
+        self._abtash_cipher(dupped_input)
         self._caesar_cipher(dupped_input)
         self._morse_code(input_string)
