@@ -38,13 +38,17 @@ class String_Decoder:
         for key in range (26):
             mini_result = []
             for i in dupped_input:
-                word = i.lower()
+                word = i
                 new_word = ''
                 for j in range(len(word)):
-                    if (ord(word[j]) - ord('a') < 0 or ord(word[j]) - ord('a') > 26):
-                        new_word = new_word + word[j]
-                    else:
+                    lowercase = ord('a') <= ord(word[j]) and ord(word[j]) <= ord('z') 
+                    uppercase = ord('A') <= ord(word[j]) and ord(word[j]) <= ord('Z')
+                    if (lowercase):
                         new_word = new_word + chr(((ord(word[j]) - ord('a') - key) % 26) + ord('a'))
+                    elif (uppercase):
+                        new_word = new_word + chr(((ord(word[j]) - ord('A') - key) % 26) + ord('A'))
+                    else:
+                        new_word = new_word + word[j]
                 mini_result.append(new_word)
             if (meaning_check(mini_result, word_list=self.words)):
                 found = True
