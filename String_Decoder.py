@@ -1,110 +1,124 @@
-from _helpers import kb_map
+from _helpers import kb_map, RESULT_FOLDER_PATH
 from meaning_check import meaning_check
 from tqdm import tqdm
 from morse_code import *
 
+KEYBOARD_MAP_RESULT_PATH = "keyboard_map_result.txt"
+MORSE_CODE_RESULT_PATH = "morse_code_result.txt"
+
+
 class String_Decoder:
-    def __init__(self, split_by=' ', words=None):
+    def __init__(self, split_by=" ", words=None):
         self.split_by = split_by
         self.words = words
 
     def _print_list_of_duppeds(self, list_of_duppeds):
         for i in range(len(list_of_duppeds)):
-            print(f'{i}: ', end='')
+            print(f"{i}: ", end="")
             self._print_dupped_string(list_of_duppeds[i])
 
     def _print_dupped_string(self, dupped_input):
         for i in dupped_input:
-            print(i + ' ', end = '')
+            print(i + " ", end="")
         print()
-    
+
     def _english_kb_to_persian(self, dupped_input):
-        ofile = open('./keyboard_map_result.txt', 'w')
+        ofile = open("{}{}".format(RESULT_FOLDER_PATH, KEYBOARD_MAP_RESULT_PATH), "w")
         for i in dupped_input:
             word = i.lower()
             for j in range(len(word)):
-                if (kb_map.get(word[j] , -1) != -1):
+                if kb_map.get(word[j], -1) != -1:
                     ofile.write(kb_map[word[j]])
                 else:
                     ofile.write(word[j])
             ofile.write(self.split_by)
-        ofile.write('\n')
+        ofile.write("\n")
         ofile.close()
-        print('translated with persian keyboard map in "./keyboard_map_result.txt"')
+        print(
+            'translated with persian keyboard map in "{}{}"'.format(
+                RESULT_FOLDER_PATH, KEYBOARD_MAP_RESULT_PATH
+            )
+        )
 
-    def _caesar_cipher(self , dupped_input):
+    def _caesar_cipher(self, dupped_input):
         found = False
         result = []
-        for key in range (26):
+        for key in range(26):
             mini_result = []
             for i in dupped_input:
                 word = i
-                new_word = ''
+                new_word = ""
                 for j in range(len(word)):
-                    lowercase = ord('a') <= ord(word[j]) and ord(word[j]) <= ord('z') 
-                    uppercase = ord('A') <= ord(word[j]) and ord(word[j]) <= ord('Z')
-                    if (lowercase):
-                        new_word = new_word + chr(((ord(word[j]) - ord('a') - key) % 26) + ord('a'))
-                    elif (uppercase):
-                        new_word = new_word + chr(((ord(word[j]) - ord('A') - key) % 26) + ord('A'))
+                    lowercase = ord("a") <= ord(word[j]) and ord(word[j]) <= ord("z")
+                    uppercase = ord("A") <= ord(word[j]) and ord(word[j]) <= ord("Z")
+                    if lowercase:
+                        new_word = new_word + chr(
+                            ((ord(word[j]) - ord("a") - key) % 26) + ord("a")
+                        )
+                    elif uppercase:
+                        new_word = new_word + chr(
+                            ((ord(word[j]) - ord("A") - key) % 26) + ord("A")
+                        )
                     else:
                         new_word = new_word + word[j]
                 mini_result.append(new_word)
-            if (meaning_check(mini_result, word_list=self.words)):
+            if meaning_check(mini_result, word_list=self.words):
                 found = True
-                print('\ndecoded with ceasar cipher key ' + str(key) + ':')
+                print("\ndecoded with ceasar cipher key " + str(key) + ":")
                 self._print_dupped_string(mini_result)
             result.append(mini_result)
-        if (not found):
-            print('\ncould not decode with ceasar cipher')
+        if not found:
+            print("\ncould not decode with ceasar cipher")
         else:
-            print('done.')
-        ans = input('do you want me to print all the results(y/n)? ')
-        if (ans.strip().lower() == 'y' or ans.strip().lower() == 'yes'):
-            print('printing all: \n')
+            print("done.")
+        ans = input("do you want me to print all the results(y/n)? ")
+        if ans.strip().lower() == "y" or ans.strip().lower() == "yes":
+            print("printing all: \n")
             self._print_list_of_duppeds(result)
-    
-    def _abtash_cipher(self , dupped_input):
+
+    def _abtash_cipher(self, dupped_input):
         found = False
         result = []
         for i in dupped_input:
             word = i.lower()
-            new_word = ''
+            new_word = ""
             for j in range(len(word)):
-                if (ord(word[j]) - ord('a') < 0 or ord(word[j]) - ord('a') > 26):
+                if ord(word[j]) - ord("a") < 0 or ord(word[j]) - ord("a") > 26:
                     new_word = new_word + word[j]
                 else:
-                    new_word = new_word + chr(ord('z') - ord(word[j]) + ord('a'))
+                    new_word = new_word + chr(ord("z") - ord(word[j]) + ord("a"))
             result.append(new_word)
-        if (meaning_check(result, word_list=self.words)):
+        if meaning_check(result, word_list=self.words):
             found = True
-            print('\ndecoded with abtash cipher: ')
+            print("\ndecoded with abtash cipher: ")
             self._print_dupped_string(result)
-        if (not found):
-            print('\ncould not decode with abtash cipher')
+        if not found:
+            print("\ncould not decode with abtash cipher")
         else:
-            print('done.')
+            print("done.")
 
     def _morse_code(self, input_string):
         if not is_morse_code(input_string):
-            print('this string is not in morse code.')
+            print("this string is not in morse code.")
             return
         splitted_string = input_string.split()
         message = decode_morse_code(splitted_string)
-        if (len(message) > 0):
-            print(f'decoded with morse code: {message}')
+        if len(message) > 0:
+            print(f"decoded with morse code: {message}")
             return
-        ans = input('\nfailed to decode morse code, do you want to brute force attack(y/n)? ')
-        if (ans.strip().lower() == 'n' or ans.strip().lower() == 'no'):
-            print('continuing...')
+        ans = input(
+            "\nfailed to decode morse code, do you want to brute force attack(y/n)? "
+        )
+        if ans.strip().lower() == "n" or ans.strip().lower() == "no":
+            print("continuing...")
             return
-        print('\nstarting brute force attack...')
-        ofile = open('./morse_code_result.txt', 'w')
+        print("\nstarting brute force attack...")
+        ofile = open("{}{}".format(RESULT_FOLDER_PATH, MORSE_CODE_RESULT_PATH), "w")
         # '\n'.join(lines) + '\n'
         for num_of_spaces in tqdm(range(len(input_string))):
             decodes = decode_with_space_inject(input_string, num_of_spaces)
-            ofile.write(f'decoded with {num_of_spaces} spaces:\n')
-            ofile.write('\n'.join(decodes) + '\n')
+            ofile.write(f"decoded with {num_of_spaces} spaces:\n")
+            ofile.write("\n".join(decodes) + "\n")
         ofile.close()
         print('\nall decoded codes can be found in "./morse_code_result.txt"')
 
